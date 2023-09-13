@@ -1,0 +1,80 @@
+buildscript {
+    ext {
+        serenityVersion = '3.6.12'
+        serenityGradlePluginVersion = '3.6.7'
+        cucumberVersion = '7.11.1'
+        lombokVersion = "1.18.24"
+        junitVersion = "4.13.2"
+        assertJVersion= '3.24.1'
+        slf4jVersion = "2.0.5"
+        javaOTPVersion = "1.0.0"
+        sonarCloudVersion = "3.5.0.2730"
+        apachePoiVersion = "5.2.3"
+        apachePoiOoxmlVersion = "5.2.3"
+    }
+
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath(
+                "net.serenity-bdd:serenity-gradle-plugin:${serenityGradlePluginVersion}"
+        )
+    }
+}
+
+plugins {
+    id "java"
+    id "idea"
+    id "net.serenity-bdd.serenity-gradle-plugin" version "${serenityGradlePluginVersion}"
+    id "org.sonarqube" version "${sonarCloudVersion}"
+}
+
+apply plugin: "java"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
+
+repositories.addAll(buildscript.repositories)
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+group 'com.sqasa.automatizacion'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    testImplementation("net.serenity-bdd:serenity-core:${serenityVersion}")
+    testImplementation("net.serenity-bdd:serenity-junit:${serenityVersion}")
+    testImplementation("junit:junit:${junitVersion}")
+    testImplementation("org.assertj:assertj-core:${assertJVersion}")
+    testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
+    testImplementation("io.cucumber:cucumber-junit:${cucumberVersion}")
+    implementation("org.apache.poi:poi:${apachePoiVersion}")
+    implementation("org.apache.poi:poi-ooxml:${apachePoiOoxmlVersion}")
+    implementation("io.cucumber:cucumber-core:${cucumberVersion}")
+    implementation ("net.serenity-bdd:serenity-core:${serenityVersion}")
+    implementation ("net.serenity-bdd:serenity-junit:${serenityVersion}")
+    implementation ("net.serenity-bdd:serenity-cucumber:${serenityVersion}")
+    implementation ("net.serenity-bdd:serenity-screenplay:${serenityVersion}")
+    implementation ("net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}")
+    implementation ("net.serenity-bdd:serenity-screenplay-rest:${serenityVersion}")
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+}
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+}
+
+test{
+    ignoreFailures = true
+}
+
+gradle.startParameter.continueOnFailure = true
